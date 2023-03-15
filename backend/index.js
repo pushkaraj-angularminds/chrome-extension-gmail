@@ -10,43 +10,17 @@ app.listen(8000, () => {
   console.log('connected');
 });
 
-app.post('/', (req, res, next) => {
+app.post('/', async (req, res, next) => {
   const emailAddresses = req.body.selectedEmails;
   const ACCESS_TOKEN = req.body.ACCESS_TOKEN;
-  deleteFilter(emailAddresses, ACCESS_TOKEN);
-  res.send(req.body);
+  const response = await deleteFilter(emailAddresses, ACCESS_TOKEN);
+  if (response.success) {
+    res.status(200).json(response.data);
+  } else {
+    res.status(401).json(response);
+  }
 });
 
-/* const createDelFilter = async (email, ACCESS_TOKEN) => {
-  const userID = 'me';
-  const headers = {
-    headers: {
-      Authorization: `Bearer ${ACCESS_TOKEN}`,
-    },
-  };
-
-  const filter = {
-    criteria: {
-      from: email,
-    },
-    action: {
-      removeLabelIds: ['INBOX'],
-      addLabelIds: ['TRASH'],
-    },
-  };
-
-  try {
-    const response = await axios.post(
-      `https://gmail.googleapis.com/gmail/v1/users/${userID}/settings/filters`,
-      filter,
-      headers
-    );
-    console.log(response.data);
-  } catch (error) {
-    console.error(error);
-  }
-};
- */
 async function deleteFilter(emailAddresses, ACCESS_TOKEN) {
   let query = '';
   for (let email of emailAddresses) {
@@ -72,9 +46,18 @@ async function deleteFilter(emailAddresses, ACCESS_TOKEN) {
     },
   };
   try {
-    const response = await axios.post(url, filter, options);
-    console.log(response.data);
+    const googleRes = await axios.post(url, filter, options);
+
+    const data = {
+      message: 'successfully created delete filter',
+      id: googleRes.data.id,
+    };
+
+    return {
+      success: true,
+      data,
+    };
   } catch (error) {
-    console.error(error);
+    return error;
   }
 }
