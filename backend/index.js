@@ -11,25 +11,29 @@ app.listen(8000, () => {
 });
 
 app.post('/', async (req, res) => {
-  const emailAddresses = req.body.selectedEmails;
-  if (emailAddresses.length > 470) {
-    res.status(401).json('selectedEmails length should be less than 470');
+  const { selectedEmails, ACCESS_TOKEN } = req.body;
+
+  if (selectedEmails.length > 470) {
+    return res
+      .status(401)
+      .json('selectedEmails length should be less than 470');
   }
-  const ACCESS_TOKEN = req.body.ACCESS_TOKEN;
-  const response = await deleteFilter(emailAddresses, ACCESS_TOKEN);
-  if (response.success) {
-    res.status(200).json(response.data);
-  } else {
-    res.status(401).json(response);
+
+  try {
+    const response = await deleteFilter(selectedEmails, ACCESS_TOKEN);
+
+    if (response.success) {
+      return res.status(200).json(response.data);
+    }
+
+    return res.status(401).json(response);
+  } catch (error) {
+    return res.status(500).json(error);
   }
 });
 
 async function deleteFilter(emailAddresses, ACCESS_TOKEN) {
-  let query = '';
-  for (let email of emailAddresses) {
-    query += `from:${email} OR `;
-  }
-  query = query.slice(0, -4);
+  const query = emailAddresses.map((email) => `from:${email}`).join(' OR ');
 
   const filter = {
     criteria: {
@@ -40,27 +44,30 @@ async function deleteFilter(emailAddresses, ACCESS_TOKEN) {
       addLabelIds: ['TRASH'],
     },
   };
-  const userID = 'me';
-  const url = `https://www.googleapis.com/gmail/v1/users/${userID}/settings/filters`;
+
+  const url = `https://www.googleapis.com/gmail/v1/users/me/settings/filters`;
+
   const options = {
     headers: {
       Authorization: `Bearer ${ACCESS_TOKEN}`,
       'Content-Type': 'application/json',
     },
   };
-  try {
-    const googleRes = await axios.post(url, filter, options);
 
-    const data = {
-      message: 'successfully created delete filter',
-      id: googleRes.data.id,
-    };
+  try {
+    const { data } = await axios.post(url, filter, options);
 
     return {
       success: true,
-      data,
+      data: {
+        message: 'successfully created delete filter',
+        id: data.id,
+      },
     };
   } catch (error) {
-    return error;
+    return {
+      success: false,
+      error: error.message,
+    };
   }
 }
