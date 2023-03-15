@@ -1,7 +1,6 @@
 $(document).ready(function () {
   const CLIENT_ID =
     "460275944891-r69qqtccnrjoobv9selsdetr320gqu86.apps.googleusercontent.com";
-  let email = "akiidadabcs@gmail.com";
   const SCOPES =
     "https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.settings.basic https://www.googleapis.com/auth/gmail.modify";
 
@@ -10,14 +9,7 @@ $(document).ready(function () {
   )}&redirect_uri=${encodeURIComponent(window.location.origin)}`;
 
   let accessToken = localStorage.getItem("access_token");
-  const from = "pushkarajsable@gmail.com";
-  const headers = {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  };
-  const userID = "me"; // the special value "me" indicate's the authenticated user.
-
+  
   const hashParams = new URLSearchParams(window.location.hash.substr(1));
   var ACCESS_TOKEN = hashParams.get("access_token");
   console.log("first", ACCESS_TOKEN);
@@ -52,11 +44,23 @@ $(document).ready(function () {
     container.classList.remove("T-I-JW");
   });
   container.addEventListener("click", () => {
-    let liHtml = "";
-    selectedRowEmail.map((mails) => {
-      liHtml += `<li>${mails}</li>`;
-    });
-    var htmlfile = `
+    if (selectedRowEmail.length > 470) {
+      var alertPopup = document.getElementsByClassName("vh")[0];
+      alertPopup.style.background = "red";
+      alertPopup.innerHTML = `<span class="aT"><span class="bAq">Cannot select more than 470 email addresses!</span><span class="bAo">&nbsp;<span class="ag a8k" tabindex="0" role="alert" id="link_undo" param="#thread-a:r-4302120075518949594" idlink="" style="visibility:hidden" aria-live="assertive">Undo</span></span></span><div tabindex="0" role="button" class="bBe"><div class="bBf"></div></div>`;
+      const alertpopupParent = document.getElementsByClassName("b8 UC")[0];
+      alertpopupParent.classList.add("bAp");
+      Object.assign(alertpopupParent.style, { position: "unset" });
+      setTimeout(() => {
+        alertpopupParent.classList.remove("bAp");
+        Object.assign(alertpopupParent.style, { position: "relative" });
+      }, 5000);
+    } else {
+      let liHtml = "";
+      selectedRowEmail.map((mails) => {
+        liHtml += `<li>${mails}</li>`;
+      });
+      var htmlfile = `
     <div id="myModal" class="modal">
 
   <!-- Modal content -->
@@ -83,69 +87,69 @@ $(document).ready(function () {
 </div>
     `;
 
-    var popupElement = document.createElement("div");
-    popupElement.className = "J-M aX0 aYO newPopup";
-    popupElement.setAttribute("tabindex", "0");
+      var popupElement = document.createElement("div");
+      popupElement.className = "J-M aX0 aYO newPopup";
+      popupElement.setAttribute("tabindex", "0");
 
-    popupElement.role = "menu";
-    popupElement.ariaHasPopup = "true";
-    const popupElementStyle = {
-      "user-select": "none",
-      top: "20px",
-      left: "30px",
-      position: "absolute",
-    };
-    Object.assign(popupElement.style, popupElementStyle);
-    const headerDiv = document.createElement("div");
-    const popup = document.createElement("div");
-    popup.innerHTML += htmlfile;
-    popup.className = "SK AX";
-    const popupStyle = {
-      "user-select": "none",
-      "min-width": "12px",
-    };
-    Object.assign(popup.style, popupStyle);
-    headerDiv.appendChild(popup);
-    popupElement.appendChild(headerDiv);
-    document.body.appendChild(popupElement);
-    var modal = document.getElementById("myModal");
-    var submit_btn = document.getElementsByClassName("my-submit-btn")[0];
-    $(".my-submit-btn").click(function () {
-      // $(this).hide();
-      setTimeout(() => {
+      popupElement.role = "menu";
+      popupElement.ariaHasPopup = "true";
+      const popupElementStyle = {
+        "user-select": "none",
+        top: "20px",
+        left: "30px",
+        position: "absolute",
+      };
+      Object.assign(popupElement.style, popupElementStyle);
+      const headerDiv = document.createElement("div");
+      const popup = document.createElement("div");
+      popup.innerHTML += htmlfile;
+      popup.className = "SK AX";
+      const popupStyle = {
+        "user-select": "none",
+        "min-width": "12px",
+      };
+      Object.assign(popup.style, popupStyle);
+      headerDiv.appendChild(popup);
+      popupElement.appendChild(headerDiv);
+      document.body.appendChild(popupElement);
+      var modal = document.getElementById("myModal");
+      var submit_btn = document.getElementsByClassName("my-submit-btn")[0];
+      $(".my-submit-btn").click(function () {
+        // $(this).hide();
+        setTimeout(() => {
+          popupElement.style.display = "none";
+          modal.style.display = "none";
+        }, 2000);
+        var alertPopup = document.getElementsByClassName("vh")[0];
+        alertPopup.style.background = "green";
+        alertPopup.innerHTML = `<span class="aT"><span class="bAq">Messages from emails are deleted permenently!</span><span class="bAo">&nbsp;<span class="ag a8k" tabindex="0" role="alert" id="link_undo" param="#thread-a:r-4302120075518949594" idlink="" style="visibility:hidden" aria-live="assertive">Undo</span></span></span><div tabindex="0" role="button" class="bBe"><div class="bBf"></div></div>`;
+        const alertpopupParent = document.getElementsByClassName("b8 UC")[0];
+        alertpopupParent.classList.add("bAp");
+        Object.assign(alertpopupParent.style, { position: "unset" });
+        setTimeout(() => {
+          alertpopupParent.classList.remove("bAp");
+          Object.assign(alertpopupParent.style, { position: "relative" });
+        }, 5000);
+        const requestOptions = {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            selectedEmails: selectedRowEmail,
+            ACCESS_TOKEN,
+          }),
+        };
+        fetch("http://localhost:8000/", requestOptions)
+          .then((response) => console.log(response.json()))
+          .catch((e) => console.log(e));
+      });
+
+      var closebtn = document.getElementsByClassName("close")[0];
+      $(".close").click(function () {
         popupElement.style.display = "none";
         modal.style.display = "none";
-      }, 2000);
-      var alertPopup = document.getElementsByClassName("vh")[0];
-      alertPopup.style.background = "green";
-      alertPopup.innerHTML = `<span class="aT"><span class="bAq">Messages from emails are deleted permenently!</span><span class="bAo">&nbsp;<span class="ag a8k" tabindex="0" role="alert" id="link_undo" param="#thread-a:r-4302120075518949594" idlink="" style="visibility:hidden" aria-live="assertive">Undo</span></span></span><div tabindex="0" role="button" class="bBe"><div class="bBf"></div></div>`;
-      const alertpopupParent = document.getElementsByClassName("b8 UC")[0];
-      alertpopupParent.classList.add("bAp");
-      Object.assign(alertpopupParent.style, { position: "unset" });
-      setTimeout(() => {
-        alertpopupParent.classList.remove("bAp");
-        Object.assign(alertpopupParent.style, { position: "relative" });
-      }, 5000);
-      const requestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          selectedEmails: selectedRowEmail,
-          ACCESS_TOKEN,
-        }),
-      };
-      fetch("http://localhost:8000/", requestOptions)
-        .then((response) => console.log(response.json()))
-        .catch((e) => console.log(e));
-    });
-
-    var closebtn = document.getElementsByClassName("close")[0];
-    $(".close").click(function () {
-      popupElement.style.display = "none";
-      modal.style.display = "none";
-    });
+      });
+    }
   });
-
   const iconContainer = document.createElement("div");
   iconContainer.className = "asa";
 

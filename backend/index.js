@@ -12,6 +12,9 @@ app.listen(8000, () => {
 
 app.post('/', async (req, res) => {
   const emailAddresses = req.body.selectedEmails;
+  if (emailAddresses.length > 470) {
+    res.status(401).json('selectedEmails length should be less than 470');
+  }
   const ACCESS_TOKEN = req.body.ACCESS_TOKEN;
   const response = await deleteFilter(emailAddresses, ACCESS_TOKEN);
   if (response.success) {
