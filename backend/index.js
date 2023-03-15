@@ -10,7 +10,7 @@ app.listen(8000, () => {
   console.log('connected');
 });
 
-app.post('/', async (req, res, next) => {
+app.post('/', async (req, res) => {
   const emailAddresses = req.body.selectedEmails;
   const ACCESS_TOKEN = req.body.ACCESS_TOKEN;
   const response = await deleteFilter(emailAddresses, ACCESS_TOKEN);
