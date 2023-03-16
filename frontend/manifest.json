@@ -3,14 +3,15 @@
   "version": "1.0",
   "manifest_version": 3,
   "action": {
-    "default_title": "My Apps"
+    "default_title": "My Apps",
+    "default_popup": "popup.html"
   },
+
   "permissions": ["activeTab", "tabs", "storage"],
   "content_scripts": [
     {
       "matches": ["https://mail.google.com/*"],
       "css": ["scrollbars.css"],
-
       "js": ["jquery.js", "content.js"]
     }
   ],

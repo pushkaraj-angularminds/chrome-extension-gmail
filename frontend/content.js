@@ -1,6 +1,11 @@
+chrome.storage.local.set({ originWindow: window.location.origin });
+
 $(document).ready(function () {
+  let intervalWatcher;
+
   const CLIENT_ID =
     "460275944891-r69qqtccnrjoobv9selsdetr320gqu86.apps.googleusercontent.com";
+  let email = "akiidadabcs@gmail.com";
   const SCOPES =
     "https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.settings.basic https://www.googleapis.com/auth/gmail.modify";
 
@@ -9,7 +14,14 @@ $(document).ready(function () {
   )}&redirect_uri=${encodeURIComponent(window.location.origin)}`;
 
   let accessToken = localStorage.getItem("access_token");
-  
+  const from = "pushkarajsable@gmail.com";
+  const headers = {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
+  const userID = "me"; // the special value "me" indicate's the authenticated user.
+
   const hashParams = new URLSearchParams(window.location.hash.substr(1));
   var ACCESS_TOKEN = hashParams.get("access_token");
   console.log("first", ACCESS_TOKEN);
@@ -61,6 +73,7 @@ $(document).ready(function () {
         liHtml += `<li>${mails}</li>`;
       });
       var htmlfile = `
+    <html>
     <div id="myModal" class="modal">
 
   <!-- Modal content -->
@@ -116,16 +129,25 @@ $(document).ready(function () {
       var submit_btn = document.getElementsByClassName("my-submit-btn")[0];
       $(".my-submit-btn").click(function () {
         // $(this).hide();
+        var msg = "Messages from emails are deleted permenently!";
+        let msgColor = "green";
+        if (!accessToken || !ACCESS_TOKEN) {
+          msg =
+            "You are not allow to use this extension before accepting terms and Conditions !! ";
+          msgColor = "red";
+        }
         setTimeout(() => {
           popupElement.style.display = "none";
           modal.style.display = "none";
         }, 2000);
         var alertPopup = document.getElementsByClassName("vh")[0];
-        alertPopup.style.background = "green";
-        alertPopup.innerHTML = `<span class="aT"><span class="bAq">Messages from emails are deleted permenently!</span><span class="bAo">&nbsp;<span class="ag a8k" tabindex="0" role="alert" id="link_undo" param="#thread-a:r-4302120075518949594" idlink="" style="visibility:hidden" aria-live="assertive">Undo</span></span></span><div tabindex="0" role="button" class="bBe"><div class="bBf"></div></div>`;
+        alertPopup.style.background = msgColor;
+        alertPopup.innerHTML = `<span class="aT"><span class="bAq" style="margin:10px 0px">${msg}</span><span class="bAo">&nbsp;<span class="ag a8k" tabindex="0" role="alert" id="link_undo" param="#thread-a:r-4302120075518949594" idlink="" style="visibility:hidden" aria-live="assertive">Undo</span></span></span><div tabindex="0" role="button" class="bBe"><div class="bBf"></div></div>`;
         const alertpopupParent = document.getElementsByClassName("b8 UC")[0];
         alertpopupParent.classList.add("bAp");
-        Object.assign(alertpopupParent.style, { position: "unset" });
+        Object.assign(alertpopupParent.style, {
+          position: "unset",
+        });
         setTimeout(() => {
           alertpopupParent.classList.remove("bAp");
           Object.assign(alertpopupParent.style, { position: "relative" });
@@ -150,6 +172,7 @@ $(document).ready(function () {
       });
     }
   });
+
   const iconContainer = document.createElement("div");
   iconContainer.className = "asa";
 
@@ -183,13 +206,10 @@ $(document).ready(function () {
   Object.assign(popup.style, popupStyle);
 
   function actions() {
-    // console.log("started settimeout function");
-
     const toolbarSection = document.getElementsByClassName("G-tF")[0];
     toolbarSection.appendChild(wrapper);
-
     addListenerToList();
-    setInterval(addListenerToList, 1000);
+    intervalWatcher = setInterval(addListenerToList, 1000);
   }
 
   function executeAction() {
@@ -206,6 +226,11 @@ $(document).ready(function () {
 
   function addListenerToList() {
     console.log("emails listener check annd add");
+    if (!window.location.href.endsWith("inbox")) {
+      clearInterval(intervalWatcher);
+      console.log("stopped", intervalWatcher);
+      setTimeout(executeAction, 1000);
+    }
 
     let emailList = document.getElementsByTagName("tbody");
     emailList = emailList[emailList.length - 1];
