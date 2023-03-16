@@ -14,12 +14,6 @@ $(document).ready(function () {
   )}&redirect_uri=${encodeURIComponent(window.location.origin)}`;
 
   let accessToken = localStorage.getItem('access_token');
-  const from = 'pushkarajsable@gmail.com';
-  const headers = {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  };
 
   const hashParams = new URLSearchParams(window.location.hash.substr(1));
   var ACCESS_TOKEN = hashParams.get('access_token');
