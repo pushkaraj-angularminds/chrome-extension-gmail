@@ -8,7 +8,7 @@ const getHeaders = (token) => {
 };
 
 const userId = 'me';
-const BASE_URl = `https://gmail.googleapis.com/gmail/v1/users/me`;
+const BASE_URl = `https://gmail.googleapis.com/gmail/v1/users/${userId}`;
 
 async function getUserFilters(token) {
   const url = `${BASE_URl}/settings/filters`;
@@ -33,7 +33,7 @@ async function getUserEmail(token) {
 }
 
 async function getUserName(token) {
-  const url = `https://people.googleapis.com/v1/people/${userId}?personFields=names`;
+  const url = `https://people.googleapis.com/v1/people/me?personFields=names`;
 
   try {
     const response = await axios.get(url, getHeaders(token));
