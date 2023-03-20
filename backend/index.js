@@ -1,9 +1,15 @@
 const express = require('express');
-const axios = require('axios');
 const mongoose = require('mongoose');
 const app = express();
 const cors = require('cors');
 const { User } = require('./models/index');
+
+const {
+  createFilter,
+  getUserFilters,
+  getUserEmail,
+  getUserName,
+} = require('./gmailApi');
 
 app.use(express.json());
 app.use(cors());
@@ -23,60 +29,12 @@ mongoose
     });
   });
 
-const getHeaders = (token) => {
-  return {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-};
-
-const userId = 'me';
-
-async function getUserFilters(token) {
-  const url = `https://gmail.googleapis.com/gmail/v1/users/${userId}/settings/filters`;
-
-  try {
-    const response = await axios.get(url, getHeaders(token));
-    return response.data.filter;
-  } catch (error) {
-    console.log('filter error ===> ', error);
-    return false;
-  }
-}
-async function getUserEmail(token) {
-  const url = `https://gmail.googleapis.com/gmail/v1/users/${userId}/profile`;
-  try {
-    const response = await axios.get(url, getHeaders(token));
-    return response.data.emailAddress;
-  } catch (error) {
-    console.log('email error ===> ', error);
-    return false;
-  }
-}
-
-async function getUserName(token) {
-  const url = `https://people.googleapis.com/v1/people/${userId}?personFields=names`;
-
-  try {
-    const response = await axios.get(url, getHeaders(token));
-    return response.data.names[0].displayName;
-  } catch (error) {
-    console.log('name error ===> ', error);
-    return false;
-  }
-}
-
 app.post('/', async (req, res) => {
   const { selectedEmails: emailAddresses, ACCESS_TOKEN } = req.body;
   console.log(ACCESS_TOKEN);
   if (emailAddresses.length > 470) {
-    return res
-      .status(401)
-      .json('selectedEmails length should be less than 470');
+    res.status(401).json('selectedEmails length should be less than 470');
   }
-
-  const url = `https://www.googleapis.com/gmail/v1/users/${userId}/settings/filters`;
 
   const query = emailAddresses.map((email) => `from:${email}`).join(' OR ');
 
@@ -91,7 +49,7 @@ app.post('/', async (req, res) => {
   };
 
   try {
-    const response = await axios.post(url, filter, getHeaders(ACCESS_TOKEN));
+    const response = await createFilter(filter, ACCESS_TOKEN);
 
     const email = await getUserEmail(ACCESS_TOKEN);
 
