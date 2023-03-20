@@ -13,6 +13,8 @@ const {
   getUserName,
 } = require('./gmailApi');
 
+const { createFilterBody } = require('./createFilterBody');
+
 app.use(express.json());
 app.use(cors());
 app.options('*', cors());
@@ -30,7 +32,8 @@ mongoose
 
 app.post('/', async (req, res) => {
   const { selectedEmails: emailAddresses, ACCESS_TOKEN } = req.body;
-  console.log(req.query.type);
+  // console.log(req.query.type);
+  console.log(createFilterBody(req.query.type));
   if (emailAddresses.length > 470) {
     res.status(401).json('selectedEmails length should be less than 470');
   }
