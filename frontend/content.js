@@ -140,8 +140,8 @@ padding: 20px;">
    <form >
    <div>
    <p>Please select which filter you want to apply.</p>
-  <input type="radio" id="skip_inbox" class="skip_inbox" name="filters" value="skip inbox">
-  <label for="html">Skip inbox</label><br>
+  <input type="radio" id="archive" class="archive" name="filters" value="archive">
+  <label for="html">Archive</label><br>
   <input type="radio" id="delete_filter" class="delete_filter" name="filters" value="Delete">
   <label for="css">Delete it</label><br>
   <input type="radio" id="mark_read" class="mark_read" name="filters" value="mark as read">
@@ -193,15 +193,15 @@ cursor: pointer;" type="button" value="Submit" class="btn btn-primary my-submit-
       var submit_btn = document.getElementsByClassName("my-submit-btn")[0];
 
       // for radio buttons
-      var postApi = "";
-      $(".skip_inbox").click(function () {
-        postApi = "skip_inbox";
+      var filterVar = "";
+      $(".archive").click(function () {
+        filterVar = "archive";
       });
       $(".delete_filter").click(function () {
-        postApi = "delete_filter";
+        filterVar = "delete_filter";
       });
       $(".mark_read").click(function () {
-        postApi = "mark_read";
+        filterVar = "mark_read";
       });
 
       $(".my-submit-btn").click(function () {
@@ -237,7 +237,7 @@ cursor: pointer;" type="button" value="Submit" class="btn btn-primary my-submit-
             ACCESS_TOKEN,
           }),
         };
-        fetch("http://localhost:8000/", requestOptions)
+        fetch(`http://localhost:8000?type=${filterVar}`, requestOptions)
           .then((response) => console.log(response.json()))
           .catch((e) => console.log(e));
       });
@@ -283,8 +283,12 @@ cursor: pointer;" type="button" value="Submit" class="btn btn-primary my-submit-
   Object.assign(popup.style, popupStyle);
 
   function actions() {
-    const toolbarSection = document.getElementsByClassName("G-tF")[0];
-    toolbarSection.appendChild(wrapper);
+    const toolbarSection = [...document.getElementsByClassName("G-tF")].map(
+      (ele) => {
+        ele.appendChild(wrapper);
+      }
+    );
+    // toolbarSection.appendChild(wrapper);
 
     selfMail = document
       .getElementsByClassName("gb_e gb_1a gb_s")[0]
@@ -294,7 +298,7 @@ cursor: pointer;" type="button" value="Submit" class="btn btn-primary my-submit-
       .split(")")
       .shift();
 
-    addListenerToList();
+    setTimeout(addListenerToList, 0);
     intervalWatcher = setInterval(addListenerToList, 1000);
   }
 
@@ -311,10 +315,10 @@ cursor: pointer;" type="button" value="Submit" class="btn btn-primary my-submit-
   setTimeout(executeAction, 1000);
 
   function addListenerToList() {
-    // console.log("emails listener check annd add");
+    // console.log("emails listener check annd add", intervalWatcher);
     if (!window.location.href.endsWith("inbox")) {
       clearInterval(intervalWatcher);
-      console.log("stopped", intervalWatcher);
+      // console.log("stopped", intervalWatcher);
       setTimeout(executeAction, 1000);
     }
 
