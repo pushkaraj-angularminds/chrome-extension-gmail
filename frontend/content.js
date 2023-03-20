@@ -1,29 +1,9 @@
 chrome.storage.local.set({ originWindow: window.location.origin });
 
 $(document).ready(function () {
-  // const CLIENT_ID =
-  //   "460275944891-r69qqtccnrjoobv9selsdetr320gqu86.apps.googleusercontent.com";
-  // let email = "akiidadabcs@gmail.com";
-  // const SCOPES =
-  //   "https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.settings.basic https://www.googleapis.com/auth/gmail.modify";
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("expiry_time");
 
-  // const authorizeUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&response_type=token&scope=${encodeURIComponent(
-  //   SCOPES
-  // )}&redirect_uri=${encodeURIComponent(window.location.origin)}`;
-
-  // let accessToken = localStorage.getItem("access_token");
-
-  // const hashParams = new URLSearchParams(window.location.hash.substr(1));
-  // var ACCESS_TOKEN = hashParams.get("access_token");
-  // if (ACCESS_TOKEN) {
-  //   accessToken = ACCESS_TOKEN;
-  //   localStorage.setItem("access_token", accessToken);
-  // } else if (accessToken) {
-  //   ACCESS_TOKEN = accessToken;
-  // } else {
-  //   accessToken = ACCESS_TOKEN;
-  //   window.location.href = authorizeUrl;
-  // }
   const CLIENT_ID =
     "460275944891-r69qqtccnrjoobv9selsdetr320gqu86.apps.googleusercontent.com";
   let email = "akiidadabcs@gmail.com";
@@ -37,19 +17,25 @@ $(document).ready(function () {
   let accessToken = localStorage.getItem("access_token");
   let expiryTime = localStorage.getItem("expiry_time");
 
-  const hashParams = new URLSearchParams(window.location.hash.substr(1));
+  var hashParams = new URLSearchParams(window.location.hash.substr(1));
   var ACCESS_TOKEN = hashParams.get("access_token");
+  console.log("hello first", ACCESS_TOKEN);
   var EXPIRY_TIME = hashParams.get("expires_in");
   if (ACCESS_TOKEN && EXPIRY_TIME) {
+    console.log("in if");
     accessToken = ACCESS_TOKEN;
     expiryTime = new Date().getTime() + EXPIRY_TIME * 1000;
     localStorage.setItem("access_token", accessToken);
     localStorage.setItem("expiry_time", expiryTime);
   } else if (accessToken && expiryTime && new Date().getTime() < expiryTime) {
+    console.log("in elseif");
+
     ACCESS_TOKEN = accessToken;
-  } else {
-    window.location.href = authorizeUrl;
   }
+  //  else {
+  //   console.log("else");
+  //   window.location.href = authorizeUrl;
+  // }
 
   // Check token expiration every 10 minutes
   setInterval(() => {
@@ -89,7 +75,9 @@ $(document).ready(function () {
       Object.assign(alertpopupParent.style, { position: "unset" });
       setTimeout(() => {
         alertpopupParent.classList.remove("bAp");
-        Object.assign(alertpopupParent.style, { position: "relative" });
+        Object.assign(alertpopupParent.style, {
+          position: "relative",
+        });
       }, 5000);
     } else {
       // stores emails after map
@@ -208,9 +196,8 @@ cursor: pointer;" type="button" value="Submit" class="btn btn-primary my-submit-
         // $(this).hide();
         var msg = "Messages from emails are deleted permenently!";
         let msgColor = "green";
-        if (!accessToken || !ACCESS_TOKEN) {
-          msg =
-            "You are not allow to use this extension before accepting terms and Conditions !! ";
+        if (!accessToken) {
+          msg = "First, agree to the terms and conditions.";
           msgColor = "red";
         }
         setTimeout(() => {
@@ -227,8 +214,12 @@ cursor: pointer;" type="button" value="Submit" class="btn btn-primary my-submit-
         });
         setTimeout(() => {
           alertpopupParent.classList.remove("bAp");
-          Object.assign(alertpopupParent.style, { position: "relative" });
-        }, 5000);
+          Object.assign(alertpopupParent.style, {
+            position: "relative",
+          });
+          alertPopup.style.removeProperty("background");
+          alertPopup.innerHTML = "";
+        }, 30000);
         const requestOptions = {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -362,4 +353,6 @@ cursor: pointer;" type="button" value="Submit" class="btn btn-primary my-submit-
     popupContainer.appendChild(popup);
     wrapper.appendChild(popupContainer);
   }
+
+  let logout = document.getElementsByClassName("vZvJBb");
 });
