@@ -4,6 +4,8 @@ const app = express();
 const cors = require('cors');
 const { User } = require('./models/index');
 
+require('dotenv').config();
+
 const {
   createFilter,
   getUserFilters,
@@ -16,13 +18,10 @@ app.use(cors());
 app.options('*', cors());
 
 mongoose
-  .connect(
-    'mongodb+srv://pushkar:pushkar123@cluster0.1oermdv.mongodb.net/chrome-ext?retryWrites=true&w=majority',
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  )
+  .connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => {
     app.listen(8000, () => {
       console.log('connected');
@@ -31,7 +30,7 @@ mongoose
 
 app.post('/', async (req, res) => {
   const { selectedEmails: emailAddresses, ACCESS_TOKEN } = req.body;
-  console.log(ACCESS_TOKEN);
+  console.log(req.query.type);
   if (emailAddresses.length > 470) {
     res.status(401).json('selectedEmails length should be less than 470');
   }
