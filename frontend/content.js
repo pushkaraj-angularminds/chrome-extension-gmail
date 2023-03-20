@@ -219,7 +219,7 @@ cursor: pointer;" type="button" value="Submit" class="btn btn-primary my-submit-
           });
           alertPopup.style.removeProperty("background");
           alertPopup.innerHTML = "";
-        }, 30000);
+        }, 5000);
         const requestOptions = {
           method: "POST",
           headers: { "Content-Type": "application/json" },
