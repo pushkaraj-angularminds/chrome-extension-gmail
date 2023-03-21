@@ -14,10 +14,9 @@
 
 /* Modal Content */
 .modal-content {
-  background-color: #fefefe;
+  background-color: transparent;
   margin: auto;
   padding: 20px;
-  border: 1px solid #888;
   width: 40%;
 }
 
@@ -37,4 +36,103 @@
 }
 #myModal {
   display: block;
+}
+.radio-divs {
+  background: #b2b2b3;
+  padding: 16px;
+  border-radius: 10px;
+  height: 18px;
+  margin: 16px 0px 16px 0px;
+}
+
+.checkbox-div {
+  padding: 16px;
+  border-radius: 10px;
+  height: 18px;
+  margin: 16px 0px 16px 0px;
+}
+
+/* custom radio button */
+
+.popup-container * {
+  font-size: 16px;
+  transition-duration: 300ms;
+  user-select: none;
+}
+
+.popup-container {
+  background: #e6e7e7;
+  width: 500px;
+  padding: 30px 40px;
+  border-radius: 20px;
+}
+
+h4 {
+  margin: unset;
+}
+
+.section {
+  background: #b2b3b2;
+  padding: 15px;
+  font-weight: 500;
+  border-radius: 5px;
+}
+
+.option {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.option1 {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.option:hover {
+  background: hsl(120, 1%, 50%);
+}
+
+input,
+label,
+.option,
+button {
+  cursor: pointer;
+}
+
+.v-flex {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+input[type="radio"] {
+  width: 20px;
+  height: 20px;
+}
+
+.domain-checkbox {
+  width: 20px;
+  height: 20px;
+}
+
+.action-section {
+  display: flex;
+  gap: 20px;
+}
+.action-section > button {
+  flex: 1;
+  padding: 15px;
+  border-radius: 5px;
+  border: none;
+}
+.success-btn {
+  background: #14af5d;
+  color: #fff;
+}
+.cancel-btn {
+  background: #b2b3b2;
+}
+
+.option input:checked ~ .check {
+  background-color: blue;
 }

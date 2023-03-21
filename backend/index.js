@@ -75,3 +75,9 @@ app.post('/api/filter', async (req, res) => {
     res.status(402).json({ message: 'something went wrong', error });
   }
 });
+
+app.post("/getMail", async (req, res) => {
+  const email = await getUserEmail(req.body.ACCESS_TOKEN);
+  if (email) res.status(200).send({ email: email });
+  else res.status(400).send({ message: "Invalid token" });
+});
