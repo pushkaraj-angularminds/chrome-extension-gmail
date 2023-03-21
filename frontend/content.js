@@ -6,7 +6,6 @@ $(document).ready(function () {
 
   const CLIENT_ID =
     "460275944891-r69qqtccnrjoobv9selsdetr320gqu86.apps.googleusercontent.com";
-  let email = "akiidadabcs@gmail.com";
   const SCOPES =
     "https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.settings.basic https://www.googleapis.com/auth/gmail.modify";
 
