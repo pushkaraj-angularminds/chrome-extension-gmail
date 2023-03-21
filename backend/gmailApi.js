@@ -17,7 +17,7 @@ async function getUserFilters(token) {
     const response = await axios.get(url, getHeaders(token));
     return response.data.filter;
   } catch (error) {
-    console.log('filter error ===> ', error);
+    console.log('getUserFilters error ===> ');
     return false;
   }
 }
@@ -27,7 +27,7 @@ async function getUserEmail(token) {
     const response = await axios.get(url, getHeaders(token));
     return response.data.emailAddress;
   } catch (error) {
-    console.log('email error ===> ', error);
+    console.log('getUserEmail error ===> ');
     return false;
   }
 }
@@ -39,7 +39,7 @@ async function getUserName(token) {
     const response = await axios.get(url, getHeaders(token));
     return response.data.names[0].displayName;
   } catch (error) {
-    console.log('name error ===> ', error);
+    console.log('getUserName ===> ');
     return false;
   }
 }
@@ -51,8 +51,8 @@ async function createFilter(filter, token) {
     const response = await axios.post(url, filter, getHeaders(token));
     return response.data;
   } catch (error) {
-    console.log('filter error ===> ', error);
-    return false;
+    console.log('createFilter error ===> ');
+    return error;
   }
 }
 

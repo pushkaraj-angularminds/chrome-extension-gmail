@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const app = express();
 const cors = require('cors');
 const { User } = require('./models/index');
-
 require('dotenv').config();
 
 const {
@@ -13,7 +12,7 @@ const {
   getUserName,
 } = require('./gmailApi');
 
-const { createFilterBody } = require('./createFilterBody');
+const { getFilterBody } = require('./createFilterBody');
 
 app.use(express.json());
 app.use(cors());
@@ -30,29 +29,28 @@ mongoose
     });
   });
 
-app.post('/', async (req, res) => {
+app.post('/api/filter', async (req, res) => {
   const { selectedEmails: emailAddresses, ACCESS_TOKEN } = req.body;
   // console.log(req.query.type);
-  console.log(createFilterBody(req.query.type));
-  if (emailAddresses.length > 470) {
-    res.status(401).json('selectedEmails length should be less than 470');
-  }
+  // console.log(getFilterBody(req.query.type));
+  // if (emailAddresses.length > 470) {
+  //   res.status(401).json('selectedEmails length should be less than 470');
+  // }
 
-  const query = emailAddresses.map((email) => `from:${email}`).join(' OR ');
+  // const query = emailAddresses.map((email) => `from:${email}`).join(' OR ');
 
-  const filter = {
-    criteria: {
-      from: query,
-    },
-    action: {
-      removeLabelIds: ['INBOX'],
-      addLabelIds: ['TRASH'],
-    },
-  };
-
+  // const filter = {
+  //   criteria: {
+  //     from: query,
+  //   },
+  //   action: {
+  //     removeLabelIds: ['INBOX'],
+  //     addLabelIds: ['TRASH'],
+  //   },
+  // };
+  const filter = getFilterBody(req.query.action, emailAddresses);
   try {
     const response = await createFilter(filter, ACCESS_TOKEN);
-
     const email = await getUserEmail(ACCESS_TOKEN);
 
     const filters = await getUserFilters(ACCESS_TOKEN);
