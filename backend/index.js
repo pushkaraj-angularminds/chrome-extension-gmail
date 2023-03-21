@@ -31,24 +31,15 @@ mongoose
 
 app.post('/api/filter', async (req, res) => {
   const { selectedEmails: emailAddresses, ACCESS_TOKEN } = req.body;
-  // console.log(req.query.type);
-  // console.log(getFilterBody(req.query.type));
-  // if (emailAddresses.length > 470) {
-  //   res.status(401).json('selectedEmails length should be less than 470');
-  // }
+  const { action } = req.query;
 
-  // const query = emailAddresses.map((email) => `from:${email}`).join(' OR ');
+  if (!emailAddresses || !ACCESS_TOKEN || !action) {
+    res.status(400).send('invalid data sent please check  your payload');
+  } else if (emailAddresses.length > 470) {
+    res.status(401).json('selectedEmails length should be less than 470');
+  }
 
-  // const filter = {
-  //   criteria: {
-  //     from: query,
-  //   },
-  //   action: {
-  //     removeLabelIds: ['INBOX'],
-  //     addLabelIds: ['TRASH'],
-  //   },
-  // };
-  const filter = getFilterBody(req.query.action, emailAddresses);
+  const filter = getFilterBody(action, emailAddresses);
   try {
     const response = await createFilter(filter, ACCESS_TOKEN);
     const email = await getUserEmail(ACCESS_TOKEN);
@@ -76,8 +67,8 @@ app.post('/api/filter', async (req, res) => {
   }
 });
 
-app.post("/getMail", async (req, res) => {
+app.post('/getMail', async (req, res) => {
   const email = await getUserEmail(req.body.ACCESS_TOKEN);
   if (email) res.status(200).send({ email: email });
-  else res.status(400).send({ message: "Invalid token" });
+  else res.status(400).send({ message: 'Invalid token' });
 });
