@@ -12,7 +12,6 @@ function getFilterBody(filterType, emailAddresses) {
     },
     archive: {
       removeLabelIds: ['INBOX'],
-      addLabelIds: ['Archive'],
     },
   };
 
