@@ -76,12 +76,12 @@ $(document).ready(function () {
         });
       }, 5000);
     } else {
+      let filterValidation = false;
       var htmlfile = `
-<html>
 <div id="myModal" class="modal">
 
 <!-- Modal content -->
-<div class="modal-content">
+<div class="modal-content" class="myModal">
 <div style="border-radius: 5px;
 background-color: transparent;
 padding: 20px;">
@@ -193,11 +193,15 @@ padding: 20px;">
         domain = true;
       });
       $(".success-btn").click(function () {
-        console.log("domain", domain);
-        let filterValue = $("input[name='filter']:checked").val();
-        console.log("archive clicked", filterValue);
-        filterVar = "archive";
+        let p = "<h2>Hello Akash Tondare </h2>";
+        let parentModal =
+          document.getElementsByClassName("SK AX")[0].childNodes[5];
 
+        console.log(parentModal.getElementsByClassName("myModal"));
+        let filterValue = $("input[name='filter']:checked").val();
+        if (!filterValue) {
+          filterValidation = true;
+        }
         var msg = "Messages from emails are deleted permenently!";
         let msgColor = "green";
         if (!accessToken) {
