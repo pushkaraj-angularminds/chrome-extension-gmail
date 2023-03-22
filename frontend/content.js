@@ -5,26 +5,26 @@ $(document).ready(function () {
   // localStorage.removeItem("expiry_time");
 
   const CLIENT_ID =
-    "460275944891-r69qqtccnrjoobv9selsdetr320gqu86.apps.googleusercontent.com";
+    '460275944891-r69qqtccnrjoobv9selsdetr320gqu86.apps.googleusercontent.com';
   const SCOPES =
-    "https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.settings.basic https://www.googleapis.com/auth/gmail.modify";
+    'https://www.googleapis.com/auth/gmail.settings.basic https://www.googleapis.com/auth/gmail.modify https://www.googleapis.com/auth/userinfo.profile';
 
   const authorizeUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&response_type=token&scope=${encodeURIComponent(
     SCOPES
   )}&redirect_uri=${encodeURIComponent(window.location.origin)}`;
 
-  let accessToken = localStorage.getItem("access_token");
-  let expiryTime = localStorage.getItem("expiry_time");
+  let accessToken = localStorage.getItem('access_token');
+  let expiryTime = localStorage.getItem('expiry_time');
 
   var hashParams = new URLSearchParams(window.location.hash.substr(1));
-  var ACCESS_TOKEN = hashParams.get("access_token");
-  console.log("hello first", ACCESS_TOKEN);
-  var EXPIRY_TIME = hashParams.get("expires_in");
+  var ACCESS_TOKEN = hashParams.get('access_token');
+  console.log('hello first', ACCESS_TOKEN);
+  var EXPIRY_TIME = hashParams.get('expires_in');
   if (ACCESS_TOKEN && EXPIRY_TIME) {
     accessToken = ACCESS_TOKEN;
     expiryTime = new Date().getTime() + EXPIRY_TIME * 1000;
-    localStorage.setItem("access_token", accessToken);
-    localStorage.setItem("expiry_time", expiryTime);
+    localStorage.setItem('access_token', accessToken);
+    localStorage.setItem('expiry_time', expiryTime);
   } else if (accessToken && expiryTime && new Date().getTime() < expiryTime) {
     ACCESS_TOKEN = accessToken;
   }
@@ -43,36 +43,36 @@ $(document).ready(function () {
   let intervalWatcher;
   let selfMail;
   let selectedRowEmail = [];
-  const wrapper = document.createElement("div");
-  wrapper.className = "G-Ni G-aE J-J5-Ji";
-  wrapper.style.display = "none";
-  wrapper.style.position = "relative";
+  const wrapper = document.createElement('div');
+  wrapper.className = 'G-Ni G-aE J-J5-Ji';
+  wrapper.style.display = 'none';
+  wrapper.style.position = 'relative';
 
-  const container = document.createElement("div");
-  container.className = "T-I J-J5-Ji nX T-I-ax7 T-I-Js-Gs mA";
-  container.setAttribute("role", "button");
-  container.setAttribute("tabindex", "0");
-  container.setAttribute("data-tooltip", "Get sender emails");
-  container.setAttribute("aria-label", "Get sender emails");
-  container.style.userSelect = "none";
-  container.addEventListener("mouseover", () => {
-    container.classList.add("T-I-JW");
+  const container = document.createElement('div');
+  container.className = 'T-I J-J5-Ji nX T-I-ax7 T-I-Js-Gs mA';
+  container.setAttribute('role', 'button');
+  container.setAttribute('tabindex', '0');
+  container.setAttribute('data-tooltip', 'Get sender emails');
+  container.setAttribute('aria-label', 'Get sender emails');
+  container.style.userSelect = 'none';
+  container.addEventListener('mouseover', () => {
+    container.classList.add('T-I-JW');
   });
-  container.addEventListener("mouseleave", () => {
-    container.classList.remove("T-I-JW");
+  container.addEventListener('mouseleave', () => {
+    container.classList.remove('T-I-JW');
   });
-  container.addEventListener("click", () => {
+  container.addEventListener('click', () => {
     if (selectedRowEmail.length > 470) {
-      var alertPopup = document.getElementsByClassName("vh")[0];
-      alertPopup.style.background = "red";
+      var alertPopup = document.getElementsByClassName('vh')[0];
+      alertPopup.style.background = 'red';
       alertPopup.innerHTML = `<span class="aT"><span class="bAq">Cannot select more than 470 email addresses!</span><span class="bAo">&nbsp;<span class="ag a8k" tabindex="0" role="alert" id="link_undo" param="#thread-a:r-4302120075518949594" idlink="" style="visibility:hidden" aria-live="assertive">Undo</span></span></span><div tabindex="0" role="button" class="bBe"><div class="bBf"></div></div>`;
-      const alertpopupParent = document.getElementsByClassName("b8 UC")[0];
-      alertpopupParent.classList.add("bAp");
-      Object.assign(alertpopupParent.style, { position: "unset" });
+      const alertpopupParent = document.getElementsByClassName('b8 UC')[0];
+      alertpopupParent.classList.add('bAp');
+      Object.assign(alertpopupParent.style, { position: 'unset' });
       setTimeout(() => {
-        alertpopupParent.classList.remove("bAp");
+        alertpopupParent.classList.remove('bAp');
         Object.assign(alertpopupParent.style, {
-          position: "relative",
+          position: 'relative',
         });
       }, 5000);
     } else {
@@ -92,13 +92,13 @@ padding: 20px;">
 <div class="email-list-container section">
   <span>${
     selectedRowEmail.length < 3
-      ? selectedRowEmail.join(",  ")
+      ? selectedRowEmail.join(',  ')
       : selectedRowEmail[0] +
-        ",  " +
+        ',  ' +
         selectedRowEmail[1] +
-        "+  " +
+        '+  ' +
         (selectedRowEmail.length - 2).toString() +
-        " emails"
+        ' emails'
   }</span>
 </div>
 
@@ -156,78 +156,78 @@ padding: 20px;">
 </div>
 `;
 
-      var popupElement = document.createElement("div");
-      popupElement.className = "J-M aX0 aYO newPopup";
-      popupElement.setAttribute("tabindex", "0");
+      var popupElement = document.createElement('div');
+      popupElement.className = 'J-M aX0 aYO newPopup';
+      popupElement.setAttribute('tabindex', '0');
 
-      popupElement.role = "menu";
-      popupElement.ariaHasPopup = "true";
+      popupElement.role = 'menu';
+      popupElement.ariaHasPopup = 'true';
       const popupElementStyle = {
-        "user-select": "none",
-        top: "20px",
-        left: "30px",
-        position: "absolute",
+        'user-select': 'none',
+        top: '20px',
+        left: '30px',
+        position: 'absolute',
       };
       Object.assign(popupElement.style, popupElementStyle);
-      const headerDiv = document.createElement("div");
-      const popup = document.createElement("div");
+      const headerDiv = document.createElement('div');
+      const popup = document.createElement('div');
       popup.innerHTML += htmlfile;
-      popup.className = "SK AX";
+      popup.className = 'SK AX';
       const popupStyle = {
-        "user-select": "none",
-        "min-width": "12px",
+        'user-select': 'none',
+        'min-width': '12px',
       };
       Object.assign(popup.style, popupStyle);
       headerDiv.appendChild(popup);
       popupElement.appendChild(headerDiv);
       document.body.appendChild(popupElement);
-      var modal = document.getElementById("myModal");
+      var modal = document.getElementById('myModal');
       // var submit_btn = document.getElementsByClassName("my-submit-btn")[0];
 
       // for radio buttons
       var domain = false;
-      $(".option.section,.checkbox-section").click(function (e) {
+      $('.option.section,.checkbox-section').click(function (e) {
         e.target.children[0]?.click();
       });
-      $(".domain").click(function (e) {
+      $('.domain').click(function (e) {
         domain = true;
       });
-      $(".success-btn").click(function () {
-        console.log("domain", domain);
+      $('.success-btn').click(function () {
+        console.log('domain', domain);
         let filterValue = $("input[name='filter']:checked").val();
-        console.log("archive clicked", filterValue);
-        filterVar = "archive";
+        console.log('archive clicked', filterValue);
+        filterVar = 'archive';
 
-        var msg = "Messages from emails are deleted permenently!";
-        let msgColor = "green";
+        var msg = 'Messages from emails are deleted permenently!';
+        let msgColor = 'green';
         if (!accessToken) {
-          console.log("hello in if of !accessToken");
-          msg = "First, agree to the terms and conditions.";
-          msgColor = "red";
+          console.log('hello in if of !accessToken');
+          msg = 'First, agree to the terms and conditions.';
+          msgColor = 'red';
         }
         setTimeout(() => {
-          popupElement.style.display = "none";
-          modal.style.display = "none";
+          popupElement.style.display = 'none';
+          modal.style.display = 'none';
         }, 2000);
-        var alertPopup = document.getElementsByClassName("vh")[0];
+        var alertPopup = document.getElementsByClassName('vh')[0];
         alertPopup.style.background = msgColor;
         alertPopup.innerHTML = `<span class="aT"><span class="bAq" style="margin:10px 0px">${msg}</span><span class="bAo">&nbsp;<span class="ag a8k" tabindex="0" role="alert" id="link_undo" param="#thread-a:r-4302120075518949594" idlink="" style="visibility:hidden" aria-live="assertive">Undo</span></span></span><div tabindex="0" role="button" class="bBe"><div class="bBf"></div></div>`;
-        const alertpopupParent = document.getElementsByClassName("b8 UC")[0];
-        alertpopupParent.classList.add("bAp");
+        const alertpopupParent = document.getElementsByClassName('b8 UC')[0];
+        alertpopupParent.classList.add('bAp');
         Object.assign(alertpopupParent.style, {
-          position: "unset",
+          position: 'unset',
         });
         setTimeout(() => {
-          alertpopupParent.classList.remove("bAp");
+          alertpopupParent.classList.remove('bAp');
           Object.assign(alertpopupParent.style, {
-            position: "relative",
+            position: 'relative',
           });
-          alertPopup.style.removeProperty("background");
-          alertPopup.innerHTML = "";
+          alertPopup.style.removeProperty('background');
+          alertPopup.innerHTML = '';
         }, 5000);
         const requestOptions = {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             selectedEmails: selectedRowEmail,
             ACCESS_TOKEN,
@@ -242,48 +242,48 @@ padding: 20px;">
           .catch((e) => console.log(e));
       });
 
-      var closebtn = document.getElementsByClassName("close")[0];
-      $(".cancel-btn").click(function () {
-        popupElement.style.display = "none";
-        modal.style.display = "none";
+      var closebtn = document.getElementsByClassName('close')[0];
+      $('.cancel-btn').click(function () {
+        popupElement.style.display = 'none';
+        modal.style.display = 'none';
       });
     }
   });
 
-  const iconContainer = document.createElement("div");
-  iconContainer.className = "asa";
+  const iconContainer = document.createElement('div');
+  iconContainer.className = 'asa';
 
-  const iconSection = document.createElement("img");
-  iconSection.className = "T-I-J3 J-J5-Ji ";
-  iconSection.src = chrome.runtime.getURL("assets/filter-btn.svg");
+  const iconSection = document.createElement('img');
+  iconSection.className = 'T-I-J3 J-J5-Ji ';
+  iconSection.src = chrome.runtime.getURL('assets/filter-btn.svg');
 
   iconContainer.appendChild(iconSection);
   container.appendChild(iconContainer);
   wrapper.appendChild(container);
 
-  const popupContainer = document.createElement("div");
-  popupContainer.className = "J-M aX0 aYO";
-  popupContainer.role = "menu";
-  popupContainer.ariaHasPopup = "true";
+  const popupContainer = document.createElement('div');
+  popupContainer.className = 'J-M aX0 aYO';
+  popupContainer.role = 'menu';
+  popupContainer.ariaHasPopup = 'true';
   const popupContainerStyle = {
-    "user-select": "none",
-    top: "20px",
-    left: "30px",
-    position: "absolute",
-    display: "none",
+    'user-select': 'none',
+    top: '20px',
+    left: '30px',
+    position: 'absolute',
+    display: 'none',
   };
   Object.assign(popupContainer.style, popupContainerStyle);
 
-  const popup = document.createElement("div");
-  popup.className = "SK AX";
+  const popup = document.createElement('div');
+  popup.className = 'SK AX';
   const popupStyle = {
-    "user-select": "none",
-    "min-width": "12px",
+    'user-select': 'none',
+    'min-width': '12px',
   };
   Object.assign(popup.style, popupStyle);
 
   function actions() {
-    const toolbarSection = [...document.getElementsByClassName("G-tF")].map(
+    const toolbarSection = [...document.getElementsByClassName('G-tF')].map(
       (ele) => {
         ele.appendChild(wrapper);
       }
@@ -291,17 +291,17 @@ padding: 20px;">
     // toolbarSection.appendChild(wrapper);
 
     selfMail = document
-      .getElementsByClassName("gb_e gb_1a gb_s")[0]
-      .getAttribute("aria-label")
-      .split("(")
+      .getElementsByClassName('gb_e gb_1a gb_s')[0]
+      .getAttribute('aria-label')
+      .split('(')
       .pop()
-      .split(")")
+      .split(')')
       .shift();
     console.log(selfMail);
 
     const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         ACCESS_TOKEN,
       }),
@@ -310,7 +310,7 @@ padding: 20px;">
       .then((response) =>
         response
           .json()
-          .then((res) => (res.email == selfMail ? "" : localStorage.clear()))
+          .then((res) => (res.email == selfMail ? '' : localStorage.clear()))
       )
       .catch((e) => console.log(e));
 
@@ -321,7 +321,7 @@ padding: 20px;">
     try {
       actions();
     } catch (error) {
-      console.log("DOM not ready");
+      console.log('DOM not ready');
       console.log(error);
       setTimeout(executeAction, 1000);
     }
@@ -332,22 +332,22 @@ padding: 20px;">
   function addListenerToList() {
     // console.log("emails listener check annd add", intervalWatcher);
     // console.log(selfMail);
-    if (!window.location.href.endsWith("inbox")) {
+    if (!window.location.href.endsWith('inbox')) {
       clearInterval(intervalWatcher);
       // console.log("stopped", intervalWatcher);
       setTimeout(executeAction, 1000);
     }
 
-    let emailList = document.getElementsByTagName("tbody");
+    let emailList = document.getElementsByTagName('tbody');
     emailList = emailList[emailList.length - 1];
 
-    const checkbox = [...emailList.querySelectorAll(".oZ-jc.T-Jo.J-J5-Ji")];
+    const checkbox = [...emailList.querySelectorAll('.oZ-jc.T-Jo.J-J5-Ji')];
 
     checkbox.forEach((element) => {
-      if (!element.getAttribute("listener")) {
-        element.setAttribute("listener", "true");
+      if (!element.getAttribute('listener')) {
+        element.setAttribute('listener', 'true');
         // oZ-jc T-Jo J-J5-Ji
-        element.addEventListener("click", (event) => {
+        element.addEventListener('click', (event) => {
           setTimeout(() => {
             getSelectedEmailList(emailList);
           }, 0);
@@ -358,10 +358,10 @@ padding: 20px;">
 
   function getSelectedEmailList(emailListRef) {
     selectedRowEmail = [];
-    const selectedEmailRowList = [...emailListRef.getElementsByClassName("x7")];
+    const selectedEmailRowList = [...emailListRef.getElementsByClassName('x7')];
     selectedEmailRowList.map((emailRow) => {
-      [...emailRow.querySelectorAll("[email]")].map((ele) => {
-        let mail = ele.getAttribute("email");
+      [...emailRow.querySelectorAll('[email]')].map((ele) => {
+        let mail = ele.getAttribute('email');
         if (mail !== selfMail) {
           selectedRowEmail.push(mail);
         }
@@ -372,8 +372,8 @@ padding: 20px;">
 
     console.log(selectedRowEmail);
 
-    popup.innerHTML = "";
-    popupContainer.innerHTML = "";
+    popup.innerHTML = '';
+    popupContainer.innerHTML = '';
 
     popupContainer.appendChild(popup);
     wrapper.appendChild(popupContainer);
